@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "#A8A8A8",
     // padding: 15,
     // borderRadius: 8,
     // marginVertical: 5,

@@ -28,9 +28,9 @@ import WeatherInfo from "../components/home/WeatherInfo";
 import DailyForecast from "../components/home/DailyForecast";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TopBar from "../components/home/TopBar";
-import AdsBox from "../components/home/AdsBox";
 import ProductBox from "../components/home/ProductBox";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
+import AdsBoxScroller from "../components/home/AdsBoxScroller";
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
@@ -92,14 +92,24 @@ export const HomeScreen: React.FC = () => {
   );
   const { current, location } = weather;
   const productsStat = [
-    { name: "Product 1", price: 10, image: "../../../assets/images/1.png" },
+    {
+      name: "Product 1",
+      price: 10,
+      image:
+        "https://w7.pngwing.com/pngs/727/801/png-transparent-adidas-originals-adidas-shoe-shop-sneakers-adidas-shoes.png",
+    },
     {
       name: "Product 2",
       price: 20,
       image:
         "https://api.compactorstore.com/img/540/540/resize/r/a/ran10545-sol01_2.jpg",
     },
-    { name: "Product 3", price: 20, image: "https://example.com/product2.jpg" },
+    {
+      name: "Product 3",
+      price: 20,
+      image:
+        "https://e7.pngegg.com/pngimages/16/155/png-clipart-pair-of-multicolored-adidas-running-shoes-adidas-originals-skate-shoe-sneakers-adidas-adidas-shoes-mens-poster.png",
+    },
     // Add more products to the array
   ];
   const product = {
@@ -120,7 +130,7 @@ export const HomeScreen: React.FC = () => {
       >
         <TopBar current={current} />
         <View style={styles.MainScreenContainer}>
-          <AdsBox products={productsStat} />
+          <AdsBoxScroller products={productsStat} />
           <SearchBar
             showSearch={showSearch}
             toggleSearch={toggleSearch}
@@ -149,14 +159,14 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
-    backgroundColor: "red",
+    backgroundColor: "Transparent",
     flexDirection: "column",
   },
   MainScreenContainer: {
     height: "100%",
     width: "100%",
-    padding: "2%",
-    backgroundColor: "purple",
+    paddingHorizontal: "2%",
+    backgroundColor: "#A8A8A8",
     flexDirection: "column",
   },
   ProductContainer: {

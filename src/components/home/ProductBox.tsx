@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { Product } from "../../@types/product";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type ProductBoxProps = {
   product: Product;
@@ -31,14 +32,16 @@ const styles = StyleSheet.create({
     flexBasis: "48%",
     flexDirection: "column",
     justifyContent: "space-between",
-    backgroundColor: "blue",
+    backgroundColor: "white",
     paddingVertical: 10,
     paddingHorizontal: 3,
     borderRadius: 8,
     marginVertical: 5,
   },
   AdPhotoContainer: {
+    alignItems: "center",
     flex: 3 / 5,
+    width: "100%",
   },
   AdsBoxPromoContainer: {
     marginHorizontal: 10,
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 2 / 5,
     flexDirection: "column",
     alignItems: "flex-start",
-    backgroundColor: "red",
+    backgroundColor: "#FFF",
     marginTop: 5,
   },
   AdPhoto: {
@@ -54,7 +57,7 @@ const styles = StyleSheet.create({
     height: 85,
   },
   PromoText: {
-    color: "white",
+    color: "black",
     fontWeight: "600",
     fontSize: 16,
   },

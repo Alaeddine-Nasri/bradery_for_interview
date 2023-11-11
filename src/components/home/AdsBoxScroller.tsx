@@ -38,7 +38,7 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
     <View style={styles.slide}>
       <View style={styles.AdsBoxContainer}>
         <View style={styles.AdPhotoContainer}>
-          <Image source={{ uri: item.image }} style={styles.AdPhoto} />
+          <Image source={{ uri: item.images[0] }} style={styles.AdPhoto} />
         </View>
         <View style={styles.AdsBoxPromoContainer}>
           <Text style={styles.PromoText}>{item.name}</Text>
@@ -50,34 +50,40 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
   );
 
   return (
-    <FlatList
-      style={styles.sliderContainer}
-      ref={flatListRef}
-      horizontal
-      data={[products[1], products[0], products[2]]}
-      keyExtractor={(item, index) => `${index}`}
-      renderItem={renderItem}
-      showsHorizontalScrollIndicator={false}
-      onMomentumScrollEnd={(event) => {
-        const index = Math.round(
-          event.nativeEvent.contentOffset.x / Dimensions.get("window").width
-        );
-        currentIndexRef.current = index;
-      }}
-    />
+    <View style={styles.AdsContainer}>
+      <FlatList
+        style={styles.sliderContainer}
+        ref={flatListRef}
+        horizontal
+        data={[products[1], products[0], products[2], products[0], products[2]]}
+        keyExtractor={(item, index) => `${index}`}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={(event) => {
+          const index = Math.round(
+            event.nativeEvent.contentOffset.x / Dimensions.get("window").width
+          );
+          currentIndexRef.current = index;
+        }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  AdsContainer: {
+    flex: 0.25,
+  },
   sliderContainer: {
-    flex: 1,
-    backgroundColor: "red",
+    flex: 0.3,
+    // height: "30%",
+    // backgroundColor: "red",
     margin: 0,
   },
   AdsBoxContainer: {
     // height: "60%",
     alignItems: "center",
-    flex: 0,
+    flex: 0.8,
     width: "90%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -112,10 +118,10 @@ const styles = StyleSheet.create({
   slide: {
     // width: "100%",
     width: Dimensions.get("window").width - 7,
-    height: "auto",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
   },
 });
 

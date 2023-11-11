@@ -1,60 +1,48 @@
+// ProductBoxContainer.tsx
 import React from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, View, StyleSheet } from "react-native";
+import ProductBox from "./ProductBox"; // Import the new component
 import { Product } from "../../@types/product";
-import ProductBox from "./ProductBox";
 
-type ProductBoxProps = {
+interface ProductBoxContainerProps {
   products: Product[];
-};
+}
 
-const ProductBoxContainer: React.FC<ProductBoxProps> = ({ products }) => {
-  return (
-    <View>
-      <View style={styles.ProductFilters}>
-        <TouchableOpacity>
-          <Text style={styles.filtreItem}>Best Match</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filtreItem}>New Arrival</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filtreItem}>Trendy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.filtreItem}>Promotion</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.ProductBoxContainer}>
-        {products.map((product, index) => (
-          <ProductBox key={index} product={product} />
-        ))}
-      </View>
-    </View>
-  );
+const ProductBoxContainer: React.FC<ProductBoxContainerProps> = ({
+  products,
+}) => {
+  // Function to create wrapped rows of products
+  const renderRows = () => {
+    const productsPerRow = 2; // Adjust the number of products per row as needed
+    const rows: JSX.Element[] = [];
+
+    for (let i = 0; i < products.length; i += productsPerRow) {
+      const rowProducts = products
+        .slice(i, i + productsPerRow)
+        .map((product) => <ProductBox key={product.name} product={product} />);
+
+      rows.push(
+        <View style={styles.row} key={i}>
+          {rowProducts}
+        </View>
+      );
+    }
+
+    return rows;
+  };
+
+  return <ScrollView style={styles.container}>{renderRows()}</ScrollView>;
 };
 
 const styles = StyleSheet.create({
-  ProductBoxContainer: {
+  container: {
     flex: 1,
-    flexWrap: "wrap",
+    // padding: 16,
+  },
+  row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#A8A8A8",
-    // padding: 15,
-    // borderRadius: 8,
-    // marginVertical: 5,
-  },
-  ProductFilters: {
-    padding: 10,
-    flex: 1,
-    flexWrap: "wrap",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-  },
-  filtreItem: {
-    fontWeight: "500",
-    fontSize: 15,
+    // marginBottom: 5,
   },
 });
 

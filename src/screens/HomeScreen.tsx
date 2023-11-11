@@ -18,7 +18,6 @@ import { theme } from "../theme";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { featchLocations, featchWeatherForescast } from "../api/weather";
-import { weatherImages, weatherPT } from "../constants";
 import * as Progress from "react-native-progress";
 import { getData, storageData } from "../storage/asyncStorage";
 import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
@@ -31,6 +30,8 @@ import TopBar from "../components/home/TopBar";
 import ProductBox from "../components/home/ProductBox";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
 import AdsBoxScroller from "../components/home/AdsBoxScroller";
+import MyComponent from "../components/home/ProductBoxContainer";
+import { productsStat } from "../@types/products";
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
@@ -91,33 +92,6 @@ export const HomeScreen: React.FC = () => {
     []
   );
   const { current, location } = weather;
-  const productsStat = [
-    {
-      name: "Product 1",
-      price: 10,
-      image:
-        "https://w7.pngwing.com/pngs/727/801/png-transparent-adidas-originals-adidas-shoe-shop-sneakers-adidas-shoes.png",
-    },
-    {
-      name: "Product 2",
-      price: 20,
-      image:
-        "https://api.compactorstore.com/img/540/540/resize/r/a/ran10545-sol01_2.jpg",
-    },
-    {
-      name: "Product 3",
-      price: 20,
-      image:
-        "https://e7.pngegg.com/pngimages/16/155/png-clipart-pair-of-multicolored-adidas-running-shoes-adidas-originals-skate-shoe-sneakers-adidas-adidas-shoes-mens-poster.png",
-    },
-    // Add more products to the array
-  ];
-  const product = {
-    name: "Product 1",
-    price: 10,
-    image: "https://example.com/product1.jpg",
-  };
-  // Add more products to the array
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -138,17 +112,10 @@ export const HomeScreen: React.FC = () => {
             locations={locations}
             handleLocation={handleLocation}
           />
-          <ScrollView>
-            <ProductBoxContainer products={productsStat}></ProductBoxContainer>
-            {/* <View style={styles.ProductContainer}>
-              <ProductBox product={product} />
-              <ProductBox product={product} />
-              <ProductBox product={product} />
-              <ProductBox product={product} />
-              <ProductBox product={product} />
-              <ProductBox product={product} />
-            </View> */}
-          </ScrollView>
+          {/* <ScrollView> */}
+          {/* <ProductBoxContainer products={productsStat} /> */}
+          <MyComponent products={productsStat} />
+          {/* </ScrollView> */}
         </View>
       </SafeAreaView>
     </View>
@@ -157,13 +124,15 @@ export const HomeScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    height: "auto",
+    flex: 1,
     width: "100%",
     backgroundColor: "Transparent",
     flexDirection: "column",
   },
   MainScreenContainer: {
-    height: "100%",
+    height: "auto",
+    flex: 1,
     width: "100%",
     paddingHorizontal: "2%",
     backgroundColor: "#A8A8A8",

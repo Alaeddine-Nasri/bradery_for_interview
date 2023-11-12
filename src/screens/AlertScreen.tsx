@@ -17,7 +17,6 @@ import { StatusBar } from "expo-status-bar";
 import { theme } from "../theme";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
-import { featchLocations, featchWeatherForescast } from "../api/weather";
 import { weatherImages, weatherPT } from "../constants";
 import * as Progress from "react-native-progress";
 import { getData, storageData } from "../storage/asyncStorage";

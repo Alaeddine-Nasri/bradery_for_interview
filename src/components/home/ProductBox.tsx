@@ -99,6 +99,8 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
 import ProductDescription from "./ProductDescription";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { colors } from "../../theme/sizes";
 
 type ProductBoxProps = {
   product: Product;
@@ -121,11 +123,16 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
         <View style={styles.cardImageContainer}>
           <Image source={{ uri: product.images[0] }} style={styles.cardImage} />
         </View>
-        <View style={styles.cardDetails}>
-          <Text style={styles.productName}>{product.name}</Text>
-          <Text style={styles.productPrice}>{`$${product.price.toFixed(
-            2
-          )}`}</Text>
+        <View style={styles.rowBox}>
+          <View style={styles.cardDetails}>
+            <Text style={styles.productName}>{product.name}</Text>
+            <Text style={styles.productPrice}>{product.price}</Text>
+          </View>
+          <View>
+            <TouchableOpacity>
+              <Icon name="heart-o" size={25} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -143,6 +150,13 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
 };
 
 const styles = StyleSheet.create({
+  rowBox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingRight: 10,
+    // marginBottom: 10,
+  },
   cardStyle: {
     width: "50%",
   },
@@ -162,13 +176,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   cardImageContainer: {
-    height: 150,
+    height: 130,
     overflow: "hidden",
   },
   cardImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   cardDetails: {
     padding: 10,
@@ -179,7 +193,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: 14,
-    color: "green",
+    color: colors.breakcolor,
   },
   modalContent: {
     backgroundColor: "white",

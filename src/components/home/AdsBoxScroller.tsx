@@ -1,3 +1,4 @@
+import React, { useRef, useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -5,10 +6,11 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
-import React, { useRef, useEffect } from "react";
-
+import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
+import ProductDescription from "./ProductDescription";
 
 type AdsBoxProps = {
   products: Product[];
@@ -17,36 +19,41 @@ type AdsBoxProps = {
 const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
   const flatListRef = useRef<FlatList>(null);
   const currentIndexRef = useRef<number>(0);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // Automatically scroll to the next image
       currentIndexRef.current = (currentIndexRef.current + 1) % products.length;
       flatListRef.current?.scrollToIndex({
         index: currentIndexRef.current,
         animated: true,
       });
-    }, 3000); // Change the interval as needed (in milliseconds)
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [products]);
+
+  const toggleModal = (product: Product) => {
+    setSelectedProduct(product);
+    setModalVisible(!isModalVisible);
+  };
+
   const renderItem = ({ item }: { item: Product; index: number }) => (
-    // <View style={styles.slide}>
-    //   <Image source={{ uri: item.image }} style={styles.image} />
-    //   <Text style={styles.text}>{item.name}</Text>
-    // </View>
-    <View style={styles.slide}>
-      <View style={styles.AdsBoxContainer}>
-        <View style={styles.AdPhotoContainer}>
-          <Image source={{ uri: item.images[0] }} style={styles.AdPhoto} />
-        </View>
-        <View style={styles.AdsBoxPromoContainer}>
-          <Text style={styles.PromoText}>{item.name}</Text>
-          <Text style={styles.PromoText}>Promo</Text>
-          <Text style={styles.PromoText}>{item.price}</Text>
+    <TouchableOpacity onPress={() => toggleModal(item)}>
+      <View style={styles.slide}>
+        <View style={styles.AdsBoxContainer}>
+          <View style={styles.AdPhotoContainer}>
+            <Image source={{ uri: item.images[0] }} style={styles.AdPhoto} />
+          </View>
+          <View style={styles.AdsBoxPromoContainer}>
+            <Text style={styles.PromoText}>{item.name}</Text>
+            <Text style={styles.PromoText}>Promo</Text>
+            <Text style={styles.PromoText}>{item.price}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -55,7 +62,7 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
         style={styles.sliderContainer}
         ref={flatListRef}
         horizontal
-        data={[products[1], products[0], products[2], products[0], products[2]]}
+        data={products}
         keyExtractor={(item, index) => `${index}`}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
@@ -66,22 +73,37 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
           currentIndexRef.current = index;
         }}
       />
+
+      {/* Modal for displaying more details */}
+      <Modal
+        style={styles.modalC}
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+      >
+        {selectedProduct && (
+          <ProductDescription
+            product={selectedProduct}
+            onClose={() => setModalVisible(false)}
+          />
+        )}
+      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   AdsContainer: {
-    flex: 0.25,
+    flex: 0.35,
   },
   sliderContainer: {
     flex: 0.3,
-    // height: "30%",
-    // backgroundColor: "red",
     margin: 0,
   },
+  modalC: {
+    margin: 0,
+    width: "100%",
+  },
   AdsBoxContainer: {
-    // height: "60%",
     alignItems: "center",
     flex: 0.8,
     width: "90%",
@@ -98,30 +120,28 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   AdPhotoContainer: {
-    flex: 2 / 5,
+    flex: 0.4,
   },
   AdsBoxPromoContainer: {
     marginHorizontal: 10,
-    flex: 3 / 5,
+    flex: 0.6,
     flexDirection: "column",
   },
   AdPhoto: {
-    width: 85,
-    height: 85,
+    width: 100,
+    height: 100,
+    resizeMode: "contain",
   },
   PromoText: {
     color: "grey",
     fontWeight: "600",
     fontSize: 16,
   },
-
   slide: {
-    // width: "100%",
     width: Dimensions.get("window").width - 7,
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "blue",
   },
 });
 

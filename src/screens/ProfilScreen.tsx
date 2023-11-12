@@ -1,44 +1,36 @@
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import {
-  Dimensions,
-  View,
   Image,
+  View,
+  StyleSheet,
+  Text,
   SafeAreaView,
-  TextInput,
   Platform,
   StatusBar as StatusB,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  ScrollView,
 } from "react-native";
-import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
-import { theme } from "../theme";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
-import { featchLocations, featchWeatherForescast } from "../api/weather";
-import { weatherImages, weatherPT } from "../constants";
-import * as Progress from "react-native-progress";
-import { getData, storageData } from "../storage/asyncStorage";
-import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-
-import SearchBar from "../components/home/SearchBar";
-import WeatherInfo from "../components/home/WeatherInfo";
-import DailyForecast from "../components/home/DailyForecast";
+import { users } from "../@types/users";
+import UserInfos from "../components/profil/UserInfo";
+import Commands from "../components/profil/Commands";
+import Panel from "../components/profil/Panel";
 
 export const ProfilScreen: React.FC = () => {
-  const [showSearch, toggleSearch] = React.useState(false);
-  const [locations, setLocation] = React.useState([]);
-  const [weather, setWeather] = React.useState<Weather>({} as Weather);
-  const [loading, setLoading] = React.useState(true);
-
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      <Text style={styles.text}>Profil</Text>
-      <FontAwesomeIcon icon="user" />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          marginTop: 4,
+          paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
+        }}
+      >
+        <UserInfos user={users[0]} />
+        <Commands user={users[0]} />
+        <Panel user={users[0]} />
+      </SafeAreaView>
+      {/* <Text style={styles.text}>Profil</Text> */}
     </View>
   );
 };
@@ -58,5 +50,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 30,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 20,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

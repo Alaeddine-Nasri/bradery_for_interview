@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Dimensions,
   View,
@@ -17,7 +17,6 @@ import { StatusBar } from "expo-status-bar";
 import { theme } from "../theme";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
-import { featchLocations, featchWeatherForescast } from "../api/weather";
 import * as Progress from "react-native-progress";
 import { getData, storageData } from "../storage/asyncStorage";
 import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
@@ -30,43 +29,49 @@ import TopBar from "../components/home/TopBar";
 import ProductBox from "../components/home/ProductBox";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
 import AdsBoxScroller from "../components/home/AdsBoxScroller";
-import MyComponent from "../components/home/ProductBoxContainer";
 import { productsStat } from "../@types/products";
+import { Product } from "../@types/product";
+import { fetchProducts } from "../api/productAPI";
+import axios from "axios";
+import { colors } from "../theme/sizes";
+import Filtre from "../components/home/Filtre";
+// import { fetchProducts } from "../api/productAPI";
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
   const [locations, setLocation] = React.useState([]);
   const [weather, setWeather] = React.useState<Weather>({} as Weather);
   const [loading, setLoading] = React.useState(true);
-
-  const handleLocation = (item: Location) => {
-    setLocation([]);
-    toggleSearch(false);
-    storageData("city", item.name);
-    setLoading(true);
-    featchWeatherForescast({
-      cityName: item.name,
-      days: "7",
-    })
-      .then((data) => {
-        setWeather(data);
-        setLoading(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const [productslist, setProducts] = useState<Product[]>([]); // State to store products
 
   const handleSearch = (value: string) => {
-    if (value.length > 2) {
-      featchLocations({ cityName: value }).then((data) => {
-        setLocation(data);
-      });
-    }
+    // if (value.length > 2) {
+    // fetchProducts().then((data) => {
+    //   setLocation(data);
+    // });
+    // }
+  };
+  const [selectedFilter, setSelectedFilter] = React.useState<string>("");
+
+  const handleFilterPress = (filter: string) => {
+    // console.log(`Filter pressed: ${filter}`);
+    setSelectedFilter(filter);
   };
 
   useEffect(() => {
+    console.log("klfkslf");
+    axios
+      .get("http://localhost:3000/api/product")
+      .then((response) => {
+        console.log("klfksf");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("klfkslf");
+        console.log(error);
+      });
     fetchMyWeatherData();
+    // fetchProducts();
   }, []);
 
   const fetchMyWeatherData = async () => {
@@ -74,18 +79,30 @@ export const HomeScreen: React.FC = () => {
       let myCity = await getData("city");
       let cityName = myCity ? myCity : "Paris";
 
-      const data = await featchWeatherForescast({
-        cityName: cityName,
-        days: "7",
-      });
+      // const data = await featchWeatherForescast({
+      //   cityName: cityName,
+      //   days: "7",
+      // });
 
-      setWeather(data);
+      // setWeather(data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching weather data:", error);
       setLoading(false);
     }
   };
+  // useEffect(() => {
+  //   // Fetch products when the component mounts
+  //   fetchProducts()
+  //     .then((data) => {
+  //       setProducts(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching products:", error);
+  //     });
+
+  //   // Fetch weather data (rest of your code remains the same)
+  // }, []);
 
   const handleTextDebouce = useCallback(
     debounce((value: string) => handleSearch(value), 1200),
@@ -109,12 +126,14 @@ export const HomeScreen: React.FC = () => {
             showSearch={showSearch}
             toggleSearch={toggleSearch}
             handleTextDebouce={handleTextDebouce}
-            locations={locations}
-            handleLocation={handleLocation}
           />
           {/* <ScrollView> */}
           {/* <ProductBoxContainer products={productsStat} /> */}
-          <MyComponent products={productsStat} />
+          <Filtre
+            onFilterPress={handleFilterPress}
+            selectedFilter={selectedFilter}
+          />
+          <ProductBoxContainer products={productsStat} />
           {/* </ScrollView> */}
         </View>
       </SafeAreaView>
@@ -135,7 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     paddingHorizontal: "2%",
-    backgroundColor: "#A8A8A8",
+    backgroundColor: colors.maingrey,
     flexDirection: "column",
   },
   ProductContainer: {

@@ -1,2 +1,2 @@
-export * from './HomeScreen';
-export * from './AlertScreen';
+export * from "./HomeScreen";
+// export * from './FavoriteScreen';

@@ -4,10 +4,15 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { User } from "../../@types/product";
 
 interface UserInfosProps {
-  user: User;
+  user?: User;
 }
 
 const UserInfos: React.FC<UserInfosProps> = ({ user }) => {
+  if (!user) {
+    // If user is undefined, you can render a loading state or return null
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <Image source={user.photo} style={styles.profileImage} />

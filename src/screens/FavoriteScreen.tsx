@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   ScrollView,
-  Image,
   View,
   StyleSheet,
-  Text,
   SafeAreaView,
   Platform,
   StatusBar as StatusB,
@@ -15,13 +13,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import UserInfos from "../components/profil/UserInfo";
 import Commands from "../components/profil/Commands";
 import Panel from "../components/profil/Panel";
+import FavoriteHeader from "../components/favorite/FavoriteHeader";
 import { fetchUserById } from "../api/productAPI";
 import { User } from "../@types/product";
-import { users } from "../@types/users";
 
-export const ProfilScreen: React.FC = () => {
-  // const user = users[0];
-
+export const FavoriteScreen: React.FC = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
@@ -37,6 +33,9 @@ export const ProfilScreen: React.FC = () => {
 
     fetchData();
   }, []);
+
+  // const currentUser = users[0]; // Assuming you have an array of users, adjust as needed
+  // const currentUserId = users[0].id;
   return (
     <ScrollView
       style={styles.container}
@@ -50,11 +49,12 @@ export const ProfilScreen: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
         }}
       >
-        <UserInfos user={user} />
-        <Commands userId={1} />
+        <FavoriteHeader
+          title="Favorite Items"
+          description="Your most loved items"
+        />
         <Panel userId={1} />
       </SafeAreaView>
-      {/* <Text style={styles.text}>Profil</Text> */}
     </ScrollView>
   );
 };
@@ -62,9 +62,6 @@ export const ProfilScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "absolute",
-    height: "100%",
-    width: "100%",
   },
   scrollContent: {
     flexGrow: 1,

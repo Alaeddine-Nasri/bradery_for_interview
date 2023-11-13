@@ -4,12 +4,12 @@ import { User, Product } from "../../@types/product";
 import FavProductItem from "../favorite/FavProductItem";
 import { fetchBoughtProducts, fetchCartProducts } from "../../api/productAPI";
 
-interface PanelProps {
+interface FavProductsProps {
   // user?: User;
   userId: number;
 }
 
-const Panel: React.FC<PanelProps> = ({ userId }) => {
+const FavProducts: React.FC<FavProductsProps> = ({ userId }) => {
   const [cartProducts, setCartProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -98,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Panel;
+export default FavProducts;

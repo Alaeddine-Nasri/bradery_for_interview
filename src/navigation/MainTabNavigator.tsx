@@ -6,17 +6,18 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
 
-import { HomeScreen, AlertScreen } from "../screens";
+import { HomeScreen } from "../screens";
 //   import { Theme } from '../theme/main';
 import { NavigationKey } from "./NavigationKey";
 import { RootStackParamList } from "./RootNavigator";
 import { TabIcon } from "../components/navigation/TabIcon";
 import React from "react";
 import { ProfilScreen } from "../screens/ProfilScreen";
+import { FavoriteScreen } from "../screens/FavoriteScreen";
 
 export type MainTabParamList = {
   [NavigationKey.HomeScreen]: undefined;
-  [NavigationKey.AlertScreen]: undefined;
+  [NavigationKey.FavoriteScreen]: undefined;
   [NavigationKey.ProfilScreen]: undefined;
 };
 
@@ -40,9 +41,11 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
       initialRouteName={NavigationKey.HomeScreen}
     >
       <Tab.Screen name={NavigationKey.HomeScreen} component={HomeScreen} />
-      <Tab.Screen name={NavigationKey.AlertScreen} component={AlertScreen} />
+      <Tab.Screen
+        name={NavigationKey.FavoriteScreen}
+        component={FavoriteScreen}
+      />
       <Tab.Screen name={NavigationKey.ProfilScreen} component={ProfilScreen} />
-      {/* <Tab.Screen name={NavigationKey.AlertScreen2} component={AlertScreen} /> */}
     </Tab.Navigator>
   );
 };

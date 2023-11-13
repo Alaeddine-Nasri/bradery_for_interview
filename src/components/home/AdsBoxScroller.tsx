@@ -11,6 +11,7 @@ import {
 import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
 import ProductDescription from "./ProductDescription";
+import { addToCart } from "../../api/productAPI";
 
 type AdsBoxProps = {
   products: Product[];
@@ -84,6 +85,7 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
           <ProductDescription
             product={selectedProduct}
             onClose={() => setModalVisible(false)}
+            addToCart={addToCart}
           />
         )}
       </Modal>

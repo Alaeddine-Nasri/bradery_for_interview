@@ -1,114 +1,61 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Dimensions,
   View,
-  Image,
   SafeAreaView,
-  TextInput,
   Platform,
   StatusBar as StatusB,
   StyleSheet,
-  TouchableOpacity,
-  Text,
-  ScrollView,
 } from "react-native";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
-import { theme } from "../theme";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
-import { CalendarDaysIcon, MapPinIcon } from "react-native-heroicons/solid";
-import * as Progress from "react-native-progress";
-import { getData, storageData } from "../storage/asyncStorage";
-import { Location, Weather, WeatherImages, WeatherPT } from "../util/types";
+import { Weather } from "../util/types";
 
 import SearchBar from "../components/home/SearchBar";
-import WeatherInfo from "../components/home/WeatherInfo";
-import DailyForecast from "../components/home/DailyForecast";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import TopBar from "../components/home/TopBar";
-import ProductBox from "../components/home/ProductBox";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
 import AdsBoxScroller from "../components/home/AdsBoxScroller";
-import { productsStat } from "../@types/products";
-import { Product } from "../@types/product";
-import { fetchProducts } from "../api/productAPI";
-import axios from "axios";
+import { fetchProducts } from "../api/productAPI"; // Update this path
 import { colors } from "../theme/sizes";
 import Filtre from "../components/home/Filtre";
-// import { fetchProducts } from "../api/productAPI";
+import { Product } from "../@types/product";
+import { productsStat } from "../@types/products";
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
-  const [locations, setLocation] = React.useState([]);
   const [weather, setWeather] = React.useState<Weather>({} as Weather);
-  const [loading, setLoading] = React.useState(true);
-  const [productslist, setProducts] = useState<Product[]>([]); // State to store products
-
-  const handleSearch = (value: string) => {
-    // if (value.length > 2) {
-    // fetchProducts().then((data) => {
-    //   setLocation(data);
-    // });
-    // }
-  };
+  const [products, setProducts] = useState<Product[]>([]);
   const [selectedFilter, setSelectedFilter] = React.useState<string>("");
 
+  const handleSearch = (value: string) => {
+    // You can filter the products based on the search value here if needed
+  };
+
   const handleFilterPress = (filter: string) => {
-    // console.log(`Filter pressed: ${filter}`);
     setSelectedFilter(filter);
+    // You can filter the products based on the selected filter here if needed
   };
 
   useEffect(() => {
-    console.log("klfkslf");
-    axios
-      .get("http://localhost:3000/api/product")
-      .then((response) => {
-        console.log("klfksf");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log("klfkslf");
-        console.log(error);
-      });
-    fetchMyWeatherData();
-    // fetchProducts();
+    // Fetch products when the component mounts
+    const fetchData = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        // Handle error as needed
+      }
+    };
+
+    fetchData();
   }, []);
-
-  const fetchMyWeatherData = async () => {
-    try {
-      let myCity = await getData("city");
-      let cityName = myCity ? myCity : "Paris";
-
-      // const data = await featchWeatherForescast({
-      //   cityName: cityName,
-      //   days: "7",
-      // });
-
-      // setWeather(data);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching weather data:", error);
-      setLoading(false);
-    }
-  };
-  // useEffect(() => {
-  //   // Fetch products when the component mounts
-  //   fetchProducts()
-  //     .then((data) => {
-  //       setProducts(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching products:", error);
-  //     });
-
-  //   // Fetch weather data (rest of your code remains the same)
-  // }, []);
 
   const handleTextDebouce = useCallback(
     debounce((value: string) => handleSearch(value), 1200),
     []
   );
-  const { current, location } = weather;
+
+  const { current } = weather;
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -127,14 +74,11 @@ export const HomeScreen: React.FC = () => {
             toggleSearch={toggleSearch}
             handleTextDebouce={handleTextDebouce}
           />
-          {/* <ScrollView> */}
-          {/* <ProductBoxContainer products={productsStat} /> */}
           <Filtre
             onFilterPress={handleFilterPress}
             selectedFilter={selectedFilter}
           />
-          <ProductBoxContainer products={productsStat} />
-          {/* </ScrollView> */}
+          <ProductBoxContainer products={products} />
         </View>
       </SafeAreaView>
     </View>

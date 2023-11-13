@@ -9,12 +9,42 @@ import { colors } from "../../theme/sizes";
 interface ProductDescriptionProps {
   product: Product;
   onClose: () => void;
+  addToCart: (userId: number, productId: number) => Promise<any>;
+  removeFromCart: (userId: number, productId: number) => Promise<any>;
 }
 
 const ProductDescription: React.FC<ProductDescriptionProps> = ({
   product,
   onClose,
+  addToCart,
+  removeFromCart,
 }) => {
+  const handleAddToShoppingPanel = async () => {
+    // Assuming you have the user ID and product ID available
+    const userId = 1; // Update this with the actual user ID
+    const productId = product.id; // Assuming the product has an 'id' property
+
+    try {
+      // Call the addToCart function
+      await addToCart(userId, productId);
+      console.log("Product added to cart successfully");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+  const handleRemoveToShoppingPanel = async () => {
+    // Assuming you have the user ID and product ID available
+    const userId = 1; // Update this with the actual user ID
+    const productId = product.id; // Assuming the product has an 'id' property
+
+    try {
+      // Call the addToCart function
+      await removeFromCart(userId, productId);
+      console.log("Product remove from cart successfully");
+    } catch (error) {
+      console.error("Error removing product from cart:", error);
+    }
+  };
   return (
     <View style={styles.modalContent}>
       <View style={styles.DescriptionImageContainer}>
@@ -38,11 +68,11 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
       <View style={styles.rowBox}>
         <Text style={styles.modalprice}>${product.price}</Text>
         <View style={styles.rowBoxWidth}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleRemoveToShoppingPanel}>
             <Icon name="minus-circle" color={colors.maincolor} size={25} />
           </TouchableOpacity>
           <Text style={styles.modalText}>1</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleAddToShoppingPanel}>
             <Icon name="plus-circle" color={colors.maincolor} size={25} />
           </TouchableOpacity>
         </View>
@@ -52,9 +82,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
           <TouchableOpacity
             key={index}
             style={[styles.modalColor, { backgroundColor: color }]}
-          >
-            {/* You can include other content or components here */}
-          </TouchableOpacity>
+          ></TouchableOpacity>
         ))}
       </View>
 

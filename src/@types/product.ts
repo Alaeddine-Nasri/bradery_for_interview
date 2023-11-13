@@ -14,6 +14,11 @@ export interface User {
   deliveryAddress: string;
   photo: string;
 }
+export interface UserProduct {
+  userId: number;
+  productId: number;
+  type: "cart" | "boughtItems"; // You can adjust the types based on your requirements
+}
 
 export type Product = {
   id: number;

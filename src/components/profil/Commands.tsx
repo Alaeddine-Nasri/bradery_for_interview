@@ -1,22 +1,45 @@
-import React from "react";
-import {
-  View,
-  FlatList,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import ProductBox from "../home/ProductBox";
 import { Product, User } from "../../@types/product";
+import { fetchBoughtProducts } from "../../api/productAPI";
 
 interface CommandsProps {
-  user: User;
+  // user?: User;
+  userId: number;
 }
 
-const Commands: React.FC<CommandsProps> = ({ user }) => {
+const Commands: React.FC<CommandsProps> = ({ userId }) => {
+  const [boughtProducts, setBoughtProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const products = await fetchBoughtProducts(userId);
+        setBoughtProducts(products);
+      } catch (error) {
+        console.error("Error fetching bought products:", error);
+        // Handle error as needed
+      }
+    };
+
+    fetchData();
+  }, [userId]);
+
   const renderRows = () => {
-    if (user.boughtItems.length === 0) {
+    if (!boughtProducts || boughtProducts.length === 0) {
+      return (
+        <View style={styles.noItemsContainer}>
+          <Image
+            source={require("../../../assets/images/sad.png")}
+            style={styles.sadImage}
+          />
+          <Text style={styles.noItemsText}>You haven't bought any items.</Text>
+        </View>
+      );
+    }
+    // if (!user || !user.boughtItems) {
+    if (!boughtProducts) {
       return (
         <View style={styles.noItemsContainer}>
           <Image
@@ -28,7 +51,20 @@ const Commands: React.FC<CommandsProps> = ({ user }) => {
       );
     }
 
-    return user.boughtItems
+    // if (user.boughtItems.length === 0) {
+    if (boughtProducts.length === 0) {
+      return (
+        <View style={styles.noItemsContainer}>
+          <Image
+            source={require("../../../assets/images/sad.png")} // Provide the correct path to your image
+            style={styles.sadImage}
+          />
+          <Text style={styles.noItemsText}>You haven't bought any items.</Text>
+        </View>
+      );
+    }
+
+    return boughtProducts
       .slice(0, 2)
       .map((product: Product) => (
         <ProductBox key={product.id.toString()} product={product} />

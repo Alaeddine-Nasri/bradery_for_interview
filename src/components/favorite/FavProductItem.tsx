@@ -1,48 +1,20 @@
 import React, { useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
-import { Product, User } from "../../@types/product";
-import ProductDescription from "./ProductDescription";
+import { Product } from "../../@types/product";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/sizes";
-import { users as initialUsers } from "../../@types/users";
-import { addToCart, removeFromCart } from "../../api/productAPI";
+import ProductDescription from "../home/ProductDescription";
 
-type ProductBoxProps = {
+type FavProductItemProps = {
   product: Product;
 };
 
-const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
+const FavProductItem: React.FC<FavProductItemProps> = ({ product }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [users, setUsers] = useState(initialUsers);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-  };
-
-  const handleAddToShoppingPanel = (updatedUser: User) => {
-    console.log("Original Users:", users);
-
-    // Find the index of the user in the array
-    const userIndex = users.findIndex((user) => user.id === updatedUser.id);
-    console.log("User Index:", userIndex);
-
-    // If the user is found in the array
-    if (userIndex !== -1) {
-      // Create a new array with the updated user at the found index
-      const updatedUsers = [...users];
-      updatedUsers[userIndex] = updatedUser;
-      console.log("Updated Users:", updatedUsers);
-
-      // Update the state with the new array
-      setUsers(updatedUsers);
-      console.log("Updated State:", updatedUsers);
-      // You might want to log the shoppingCart here as well
-    } else {
-      console.log("User not found in the array.");
-    }
-
-    toggleModal(); // Close the modal after updating
   };
 
   return (
@@ -74,12 +46,7 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}
       >
-        <ProductDescription
-          product={product}
-          onClose={toggleModal}
-          addToCart={addToCart}
-          removeFromCart={removeFromCart}
-        />
+        <ProductDescription product={product} onClose={toggleModal} />
       </Modal>
     </TouchableOpacity>
   );
@@ -91,10 +58,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingRight: 10,
-    // marginBottom: 10,
   },
   cardStyle: {
-    width: "50%",
+    width: "100%",
   },
   modalC: {
     margin: 0,
@@ -133,4 +99,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductBox;
+export default FavProductItem;

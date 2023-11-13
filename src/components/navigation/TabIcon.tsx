@@ -17,7 +17,7 @@ interface Props {
 const iconMapper: { [key: string]: string } = {
   [NavigationKey.HomeScreen]: "home",
   [NavigationKey.FavoriteScreen]: "heart-o",
-  // [NavigationKey.ProfilScreen]: "favorite",
+  [NavigationKey.PanelScreen]: "home",
   [NavigationKey.ProfilScreen]: "user",
 };
 

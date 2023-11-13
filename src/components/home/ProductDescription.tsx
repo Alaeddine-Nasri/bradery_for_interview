@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Swiper from "react-native-swiper";
 import { Product } from "../../@types/product";
-// import { Icon } from "react-native-vector-icons/Icon";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/sizes";
+import { checkIfFavorite } from "../../api/productAPI";
+// import { removeFromFavorite } from "../../api/productAPI";
 
 interface ProductDescriptionProps {
   product: Product;
   onClose: () => void;
   addToCart: (userId: number, productId: number) => Promise<any>;
   removeFromCart: (userId: number, productId: number) => Promise<any>;
+  addToFavorites: (userId: number, productId: number) => Promise<any>;
+  removeFromFavorite: (userId: number, productId: number) => Promise<any>;
 }
 
 const ProductDescription: React.FC<ProductDescriptionProps> = ({
@@ -18,11 +21,44 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
   onClose,
   addToCart,
   removeFromCart,
+  addToFavorites,
+  removeFromFavorite,
 }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const userId = 1; // Replace with the actual user ID
+        const result = await checkIfFavorite(userId, product.id);
+        setIsFavorite(result.isFavorite);
+      } catch (error) {
+        console.error("Error fetching favorite status:", error);
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [product.id]);
+  const handleFavoritePress = async () => {
+    const userId = 1;
+    const productId = product.id;
+    console.log("handleFavoritePress");
+    try {
+      if (isFavorite) {
+        console.log("handleFavoritePressf");
+        await removeFromFavorite(userId, product.id);
+      } else {
+        console.log("handleFavoritePressn");
+        await addToFavorites(userId, productId);
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
+  };
   const handleAddToShoppingPanel = async () => {
-    // Assuming you have the user ID and product ID available
-    const userId = 1; // Update this with the actual user ID
-    const productId = product.id; // Assuming the product has an 'id' property
+    const userId = 1;
+    const productId = product.id;
 
     try {
       // Call the addToCart function
@@ -45,6 +81,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
       console.error("Error removing product from cart:", error);
     }
   };
+
   return (
     <View style={styles.modalContent}>
       <View style={styles.DescriptionImageContainer}>
@@ -61,8 +98,12 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
       </View>
       <View style={styles.rowBox}>
         <Text style={styles.modalTitle}>{product.name}</Text>
-        <TouchableOpacity>
-          <Icon name="heart-o" size={25} />
+        <TouchableOpacity onPress={handleFavoritePress}>
+          <Icon
+            name={isFavorite ? "heart" : "heart-o"}
+            size={25}
+            color={isFavorite ? "red" : "black"}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.rowBox}>

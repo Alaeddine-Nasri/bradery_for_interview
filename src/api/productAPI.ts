@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Product, User } from "../@types/product";
 
-const BASE_URL = "https://4079-46-193-1-137.ngrok-free.app/api";
+const BASE_URL = "https://a779-46-193-1-137.ngrok-free.app/api";
 
 export const fetchProducts = async () => {
   try {
@@ -83,6 +83,57 @@ export const fetchCartProducts = async (userId: number) => {
     return cartProducts;
   } catch (error) {
     console.error("Error fetching cart products:", error);
+    throw error;
+  }
+};
+
+export const fetchFavItems = async (userId: number): Promise<Product[]> => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/user/favoriteItems/${userId}`
+    );
+    const favItems: Product[] = response.data;
+    console.log("Favorite items are:", favItems);
+    return favItems;
+  } catch (error) {
+    console.error("Error fetching favorite items:", error);
+    throw error;
+  }
+};
+
+export const checkIfFavorite = async (userId: number, productId: number) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/user/checkFavorite/${userId}/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error checking if product is a favorite:", error);
+    throw error;
+  }
+};
+
+export const addToFavorites = async (userId: number, productId: number) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/user/addToFavorites/${userId}/${productId}`
+    );
+    console.log("data?", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error adding product to favorites:", error);
+    throw error;
+  }
+};
+
+export const removeFromFavorite = async (userId: number, productId: number) => {
+  try {
+    const response = await axios.delete(
+      `${BASE_URL}/user/removeFromFavorites/${userId}/${productId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error removing product from favorite:", error);
     throw error;
   }
 };

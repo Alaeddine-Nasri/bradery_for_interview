@@ -5,10 +5,11 @@ import {
   Platform,
   StatusBar as StatusB,
   StyleSheet,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
 import { debounce } from "lodash";
 import { StatusBar } from "expo-status-bar";
-import { Weather } from "../util/types";
 
 import SearchBar from "../components/home/SearchBar";
 import TopBar from "../components/home/TopBar";
@@ -22,9 +23,9 @@ import { productsStat } from "../@types/products";
 
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
-  const [weather, setWeather] = React.useState<Weather>({} as Weather);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedFilter, setSelectedFilter] = React.useState<string>("");
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const handleSearch = (value: string) => {
     // You can filter the products based on the search value here if needed
@@ -33,6 +34,19 @@ export const HomeScreen: React.FC = () => {
   const handleFilterPress = (filter: string) => {
     setSelectedFilter(filter);
     // You can filter the products based on the selected filter here if needed
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const data = await fetchProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      // Handle error as needed
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
@@ -55,7 +69,6 @@ export const HomeScreen: React.FC = () => {
     []
   );
 
-  const { current } = weather;
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -66,8 +79,14 @@ export const HomeScreen: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
         }}
       >
-        <TopBar current={current} />
-        <View style={styles.MainScreenContainer}>
+        <TopBar />
+        <ScrollView
+          style={styles.MainScreenContainer}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
           <AdsBoxScroller products={productsStat} />
           <SearchBar
             showSearch={showSearch}
@@ -79,7 +98,7 @@ export const HomeScreen: React.FC = () => {
             selectedFilter={selectedFilter}
           />
           <ProductBoxContainer products={products} />
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

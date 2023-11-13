@@ -14,11 +14,13 @@ import { TabIcon } from "../components/navigation/TabIcon";
 import React from "react";
 import { ProfilScreen } from "../screens/ProfilScreen";
 import { FavoriteScreen } from "../screens/FavoriteScreen";
+import PanelScreen from "../screens/PanelScreen";
 
 export type MainTabParamList = {
   [NavigationKey.HomeScreen]: undefined;
   [NavigationKey.FavoriteScreen]: undefined;
   [NavigationKey.ProfilScreen]: undefined;
+  [NavigationKey.PanelScreen]: undefined;
 };
 
 //if we need to take navigation prop and use it in this componennt
@@ -45,6 +47,7 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         name={NavigationKey.FavoriteScreen}
         component={FavoriteScreen}
       />
+      <Tab.Screen name={NavigationKey.PanelScreen} component={PanelScreen} />
       <Tab.Screen name={NavigationKey.ProfilScreen} component={ProfilScreen} />
     </Tab.Navigator>
   );

@@ -6,27 +6,28 @@ import { fetchBoughtProducts, fetchCartProducts } from "../../api/productAPI";
 
 interface PanelProps {
   // user?: User;
-  userId: number;
+  products: Product[];
+  // userId: number;
 }
 
-const Panel: React.FC<PanelProps> = ({ userId }) => {
-  const [cartProducts, setCartProducts] = useState<Product[]>([]);
+const Panel: React.FC<PanelProps> = ({ products }) => {
+  // const [cartProducts, setCartProducts] = useState<Product[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const products = await fetchCartProducts(userId);
-        setCartProducts(products);
-      } catch (error) {
-        console.error("Error fetching cartProducts:", error);
-        // Handle error as needed
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const products = await fetchCartProducts(userId);
+  //       setCartProducts(products);
+  //     } catch (error) {
+  //       console.error("Error fetching cartProducts:", error);
+  //       // Handle error as needed
+  //     }
+  //   };
 
-    fetchData();
-  }, [userId]);
+  //   fetchData();
+  // }, [userId]);
 
-  if (!cartProducts || cartProducts.length === 0) {
+  if (!products || products.length === 0) {
     return (
       <View style={styles.noItemsContainer}>
         <Image
@@ -47,7 +48,7 @@ const Panel: React.FC<PanelProps> = ({ userId }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.row}>
-        {cartProducts.map((item: Product) => (
+        {products.map((item: Product) => (
           <FavProductItem key={item.id.toString()} product={item} />
         ))}
       </View>

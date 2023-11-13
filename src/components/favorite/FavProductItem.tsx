@@ -5,6 +5,7 @@ import { Product } from "../../@types/product";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/sizes";
 import ProductDescription from "../home/ProductDescription";
+import { addToCart, removeFromCart } from "../../api/productAPI";
 
 type FavProductItemProps = {
   product: Product;
@@ -34,7 +35,7 @@ const FavProductItem: React.FC<FavProductItemProps> = ({ product }) => {
           </View>
           <View>
             <TouchableOpacity>
-              <Icon name="heart-o" size={25} />
+              <Icon name="heart" color={"red"} size={25} />
             </TouchableOpacity>
           </View>
         </View>
@@ -46,7 +47,12 @@ const FavProductItem: React.FC<FavProductItemProps> = ({ product }) => {
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}
       >
-        <ProductDescription product={product} onClose={toggleModal} />
+        <ProductDescription
+          product={product}
+          onClose={toggleModal}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+        />
       </Modal>
     </TouchableOpacity>
   );

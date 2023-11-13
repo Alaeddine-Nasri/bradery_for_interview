@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
-import { Product, User } from "../../@types/product";
+import { Product } from "../../@types/product";
 import ProductDescription from "./ProductDescription";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/sizes";
-import { users as initialUsers } from "../../@types/users";
-import { addToCart, removeFromCart } from "../../api/productAPI";
+import {
+  addToCart,
+  addToFavorites,
+  removeFromCart,
+  removeFromFavorite,
+  checkIfFavorite,
+} from "../../api/productAPI";
 
 type ProductBoxProps = {
   product: Product;
@@ -14,35 +19,41 @@ type ProductBoxProps = {
 
 const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [users, setUsers] = useState(initialUsers);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const userId = 1; // Replace with the actual user ID
+        const result = await checkIfFavorite(userId, product.id);
+        setIsFavorite(result.isFavorite);
+      } catch (error) {
+        console.error("Error fetching favorite status:", error);
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [product.id]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  const handleAddToShoppingPanel = (updatedUser: User) => {
-    console.log("Original Users:", users);
-
-    // Find the index of the user in the array
-    const userIndex = users.findIndex((user) => user.id === updatedUser.id);
-    console.log("User Index:", userIndex);
-
-    // If the user is found in the array
-    if (userIndex !== -1) {
-      // Create a new array with the updated user at the found index
-      const updatedUsers = [...users];
-      updatedUsers[userIndex] = updatedUser;
-      console.log("Updated Users:", updatedUsers);
-
-      // Update the state with the new array
-      setUsers(updatedUsers);
-      console.log("Updated State:", updatedUsers);
-      // You might want to log the shoppingCart here as well
-    } else {
-      console.log("User not found in the array.");
+  const handleFavoritePress = async () => {
+    const userId = 1;
+    console.log("handleFavoritePress");
+    try {
+      if (isFavorite) {
+        console.log("handleFavoritePressf");
+        await removeFromFavorite(userId, product.id);
+      } else {
+        console.log("handleFavoritePressn");
+        await addToFavorites(userId, product.id);
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
     }
-
-    toggleModal(); // Close the modal after updating
   };
 
   return (
@@ -61,8 +72,12 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
             <Text style={styles.productPrice}>{product.price}</Text>
           </View>
           <View>
-            <TouchableOpacity>
-              <Icon name="heart-o" size={25} />
+            <TouchableOpacity onPress={handleFavoritePress}>
+              <Icon
+                name={isFavorite ? "heart" : "heart-o"}
+                size={25}
+                color={isFavorite ? "red" : "black"}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -79,6 +94,8 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
           onClose={toggleModal}
           addToCart={addToCart}
           removeFromCart={removeFromCart}
+          addToFavorites={addToFavorites}
+          removeFromFavorite={removeFromFavorite}
         />
       </Modal>
     </TouchableOpacity>

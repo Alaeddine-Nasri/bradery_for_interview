@@ -1,21 +1,20 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { NavigationKey } from "../../navigation/NavigationKey";
 
-type TopBarProps = {
-  current: {
-    temp_c: number;
-    wind_kph: string;
-    humidity: string;
-    condition: {
-      text: string;
-      icon: string;
-    };
+type TopBarProps = {};
+
+const TopBar: React.FC<TopBarProps> = () => {
+  const navigation = useNavigation();
+
+  const handleCartPress = () => {
+    console.log("changing to panelScreen");
+    navigation.navigate(NavigationKey.PanelScreen as never);
   };
-};
 
-const TopBar: React.FC<TopBarProps> = ({ current }) => {
   return (
     <View style={styles.topBarContainer}>
       <TouchableOpacity style={styles.topBarLeft}>
@@ -26,7 +25,7 @@ const TopBar: React.FC<TopBarProps> = ({ current }) => {
         <Icon name="shopping-cart" color={"#203059"} size={30} />
         <Text style={styles.detailText}>Left</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.topBarRight}>
+      <TouchableOpacity style={styles.topBarRight} onPress={handleCartPress}>
         <Icon name="shopping-cart" color={"#203059"} size={30} />
         {/* <Image
           source={require("../../../assets/icons/drop.png")}

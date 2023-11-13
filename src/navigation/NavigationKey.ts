@@ -3,4 +3,5 @@ export enum NavigationKey {
   HomeScreen = "HomeScreen",
   FavoriteScreen = "FavoriteScreen",
   ProfilScreen = "ProfilScreen",
+  PanelScreen = "PanelScreen",
 }

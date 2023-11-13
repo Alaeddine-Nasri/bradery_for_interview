@@ -17,7 +17,7 @@ export interface User {
 export interface UserProduct {
   userId: number;
   productId: number;
-  type: "cart" | "boughtItems"; // You can adjust the types based on your requirements
+  type: "cart" | "boughtItems" | "favoriteItems";
 }
 
 export type Product = {

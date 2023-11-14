@@ -15,7 +15,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ user }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={user.photo} style={styles.profileImage} />
+      <Image source={{ uri: user.photo }} style={styles.profileImage} />
       <Text style={styles.userName}>{user.name}</Text>
       <Text>Email: {user.email}</Text>
       <Text>Phone: {user.phoneNumber}</Text>
@@ -26,6 +26,7 @@ const UserInfos: React.FC<UserInfosProps> = ({ user }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    marginTop: 10,
   },
   profileImage: {
     width: 100,

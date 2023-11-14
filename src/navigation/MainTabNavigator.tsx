@@ -7,7 +7,6 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
 
 import { HomeScreen } from "../screens";
-//   import { Theme } from '../theme/main';
 import { NavigationKey } from "./NavigationKey";
 import { RootStackParamList } from "./RootNavigator";
 import { TabIcon } from "../components/navigation/TabIcon";
@@ -15,15 +14,16 @@ import React from "react";
 import { ProfilScreen } from "../screens/ProfilScreen";
 import { FavoriteScreen } from "../screens/FavoriteScreen";
 import PanelScreen from "../screens/PanelScreen";
+import AuthScreen from "../screens/AuthScreen";
 
 export type MainTabParamList = {
   [NavigationKey.HomeScreen]: undefined;
   [NavigationKey.FavoriteScreen]: undefined;
   [NavigationKey.ProfilScreen]: undefined;
   [NavigationKey.PanelScreen]: undefined;
+  [NavigationKey.AuthScreen]: undefined;
 };
 
-//if we need to take navigation prop and use it in this componennt
 type MainTabScreenProps = CompositeScreenProps<
   StackScreenProps<RootStackParamList, NavigationKey.MainTabNavigator>,
   BottomTabScreenProps<MainTabParamList>
@@ -37,11 +37,11 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         tabBarShowLabel: false,
         headerShown: false,
         tabBarIcon: (props) => <TabIcon {...props} route={route} />,
-        //   tabBarActiveTintColor: Theme.light.colors.primary,
         tabBarStyle: styles.tabBar,
       })}
-      initialRouteName={NavigationKey.HomeScreen}
+      initialRouteName={NavigationKey.AuthScreen}
     >
+      {/* <Tab.Screen name={NavigationKey.AuthScreen} component={AuthScreen} /> */}
       <Tab.Screen name={NavigationKey.HomeScreen} component={HomeScreen} />
       <Tab.Screen
         name={NavigationKey.FavoriteScreen}
@@ -52,7 +52,6 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
     </Tab.Navigator>
   );
 };
-
 const styles = StyleSheet.create({
   tabBar: {
     elevation: 0,

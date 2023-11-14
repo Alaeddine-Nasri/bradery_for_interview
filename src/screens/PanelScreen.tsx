@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -16,12 +16,20 @@ import { Product } from "../@types/product";
 import Payments from "../components/profil/Payments";
 import FavoriteHeader from "../components/favorite/FavoriteHeader";
 import Panel from "../components/profil/Panel";
+import { debounce } from "lodash";
+import SearchBar from "../components/home/SearchBar";
+import { colors } from "../theme/colors";
 
 const PanelScreen: React.FC = () => {
+  const [showSearch, toggleSearch] = React.useState(false);
   const [cartProducts, setCartProducts] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [isPaymentModalVisible, setPaymentModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const handleSearch = (value: string) => {
+    //ù
+  };
 
   const fetchData = async () => {
     try {
@@ -69,6 +77,10 @@ const PanelScreen: React.FC = () => {
       console.error("Error fetching updated cart products:", error);
     }
   };
+  const handleTextDebouce = useCallback(
+    debounce((value: string) => handleSearch(value), 1200),
+    []
+  );
 
   return (
     <ScrollView
@@ -87,6 +99,13 @@ const PanelScreen: React.FC = () => {
         }}
       >
         <FavoriteHeader title="Cart Picks" description="Buy your items now" />
+        <View style={styles.Searchcontainer}>
+          <SearchBar
+            showSearch={!showSearch}
+            toggleSearch={toggleSearch}
+            handleTextDebouce={handleTextDebouce}
+          />
+        </View>
         <Panel products={cartProducts} />
 
         <View style={styles.totalPriceContainer}>
@@ -129,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   payButton: {
-    backgroundColor: "blue",
+    backgroundColor: colors.maincolor,
     padding: 16,
     alignItems: "center",
   },
@@ -137,6 +156,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  Searchcontainer: {
+    width: "90%",
+    marginLeft: "5%",
   },
 });
 

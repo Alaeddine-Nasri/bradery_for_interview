@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import ProductBox from "../home/ProductBox";
 import { Product, User } from "../../@types/product";
 import { fetchBoughtProducts } from "../../api/productAPI";
+import { colors } from "../../theme/colors";
 
 interface CommandsProps {
   // user?: User;
@@ -73,10 +74,10 @@ const Commands: React.FC<CommandsProps> = ({ userId }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Bought Items</Text>
-        <TouchableOpacity style={styles.viewAllButton}>
-          <Text style={styles.viewAllText}>View All</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Bought Products</Text>
+        <TouchableOpacity disabled>
+          <Text style={styles.viewMore}>See More</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.row}>{renderRows()}</View>
@@ -95,9 +96,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 8,
   },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
   title: {
-    fontSize: 18,
-    fontWeight: "bold",
+    color: colors.maincolor,
+    fontWeight: "600",
+    fontSize: 20,
+  },
+  viewMore: {
+    color: colors.darkgray,
+    textDecorationLine: "underline",
+    fontSize: 15,
   },
   viewAllButton: {
     padding: 8,

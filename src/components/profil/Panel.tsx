@@ -4,6 +4,8 @@ import { User, Product } from "../../@types/product";
 import FavProductItem from "../favorite/FavProductItem";
 import { fetchBoughtProducts, fetchCartProducts } from "../../api/productAPI";
 import { colors } from "../../theme/colors";
+import { NavigationKey } from "../../navigation/NavigationKey";
+import { useNavigation } from "@react-navigation/native";
 
 interface PanelProps {
   // user?: User;
@@ -12,21 +14,12 @@ interface PanelProps {
 }
 
 const Panel: React.FC<PanelProps> = ({ products }) => {
-  // const [cartProducts, setCartProducts] = useState<Product[]>([]);
+  const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const products = await fetchCartProducts(userId);
-  //       setCartProducts(products);
-  //     } catch (error) {
-  //       console.error("Error fetching cartProducts:", error);
-  //       // Handle error as needed
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [userId]);
+  const handleCartPress = () => {
+    console.log("changing to panelScreen");
+    navigation.navigate(NavigationKey.PanelScreen as never);
+  };
 
   if (!products || products.length === 0) {
     return (
@@ -44,7 +37,7 @@ const Panel: React.FC<PanelProps> = ({ products }) => {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Products</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleCartPress}>
           <Text style={styles.viewMore}>See More</Text>
         </TouchableOpacity>
       </View>

@@ -28,4 +28,9 @@ export type Product = {
   price: string;
   colors: string[];
   stock: number;
+  promotion: boolean;
+  newPrice: string;
+  bestMatch: boolean;
+  newArrival: boolean;
+  trendy: boolean;
 };

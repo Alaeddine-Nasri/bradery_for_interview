@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { NavigationKey } from "../../navigation/NavigationKey";
 import { sizes } from "../../theme/sizes";
 import React from "react";
+import { colors } from "../../theme/colors";
 
 interface Props {
   focused: boolean;
@@ -17,7 +18,7 @@ interface Props {
 const iconMapper: { [key: string]: string } = {
   [NavigationKey.HomeScreen]: "home",
   [NavigationKey.FavoriteScreen]: "heart-o",
-  [NavigationKey.PanelScreen]: "home",
+  [NavigationKey.PanelScreen]: "shopping-cart",
   [NavigationKey.ProfilScreen]: "user",
 };
 
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     padding: sizes.s,
   },
   tabFocused: {
-    //backgroundColor: colors.lightgray,
+    // color: colors.breakcolor,
+    // backgroundColor: colors.darkgray,
   },
 });

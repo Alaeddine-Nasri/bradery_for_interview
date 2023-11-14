@@ -160,12 +160,26 @@ app.post("/api/user/buyProduct/:userId/:productId", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    // Check if the product is in stock
+    const currentStock = productResults[0].stock;
+    if (currentStock === 0) {
+      return res.status(400).json({ error: "Product out of stock" });
+    }
+
     // Add the product to the user's boughtItems
     const buyProductQuery = `
       INSERT INTO user_products (userId, productId, type)
       VALUES (${userId}, ${productId}, 'boughtItems')
     `;
     await pool.promise().query(buyProductQuery);
+
+    // Update the product stock
+    const updateStockQuery = `
+      UPDATE products
+      SET stock = ${currentStock - 1}
+      WHERE id = ${productId}
+    `;
+    await pool.promise().query(updateStockQuery);
 
     // Optionally, you can remove the product from the user's shopping cart
     const removeFromCartQuery = `

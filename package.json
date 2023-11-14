@@ -42,6 +42,7 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "^13.14.0",
     "react-native-swiper": "^1.6.0",
+    "react-native-toast-message": "^2.1.7",
     "react-native-vector-icons": "^10.0.2"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@ import { Product } from "../../@types/product";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../../theme/colors";
 import { checkIfFavorite } from "../../api/productAPI";
-// import { removeFromFavorite } from "../../api/productAPI";
+import Toast from "react-native-toast-message";
 
 interface ProductDescriptionProps {
   product: Product;
@@ -25,6 +25,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
   removeFromFavorite,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
@@ -39,6 +40,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
 
     fetchFavoriteStatus();
   }, [product.id]);
+
   const handleFavoritePress = async () => {
     const userId = 1;
     const productId = product.id;
@@ -56,6 +58,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
       console.error("Error updating favorites:", error);
     }
   };
+
   const handleAddToShoppingPanel = async () => {
     const userId = 1;
     const productId = product.id;
@@ -63,20 +66,40 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
     try {
       // Call the addToCart function
       await addToCart(userId, productId);
+      setCounter(counter + 1);
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Product Added to Panel 👋",
+        visibilityTime: 3000,
+      });
       console.log("Product added to cart successfully");
     } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Eroor",
+        text2: "Sorry you can't buy more than 1 item from this product",
+        visibilityTime: 3000,
+      });
       console.error("Error adding product to cart:", error);
     }
   };
+
   const handleRemoveToShoppingPanel = async () => {
-    // Assuming you have the user ID and product ID available
-    const userId = 1; // Update this with the actual user ID
-    const productId = product.id; // Assuming the product has an 'id' property
+    const userId = 1;
+    const productId = product.id;
 
     try {
       // Call the addToCart function
       await removeFromCart(userId, productId);
-      console.log("Product remove from cart successfully");
+      setCounter(counter > 0 ? counter - 1 : 0);
+      Toast.show({
+        type: "success",
+        text1: "Removed",
+        text2: "Product Removed From Panel 😔",
+        visibilityTime: 3000,
+      });
+      console.log("Product removed from cart successfully");
     } catch (error) {
       console.error("Error removing product from cart:", error);
     }
@@ -97,7 +120,12 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
         </Swiper>
       </View>
       <View style={styles.rowBox}>
-        <Text style={styles.modalTitle}>{product.name}</Text>
+        <View>
+          <Text style={styles.modalTitle}>{product.name}</Text>
+          <Text style={styles.modalStock}>
+            {product.stock} available in stock
+          </Text>
+        </View>
         <TouchableOpacity onPress={handleFavoritePress}>
           <Icon
             name={isFavorite ? "heart" : "heart-o"}
@@ -110,11 +138,11 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
         <Text style={styles.modalprice}>${product.price}</Text>
         <View style={styles.rowBoxWidth}>
           <TouchableOpacity onPress={handleRemoveToShoppingPanel}>
-            <Icon name="minus-circle" color={colors.maincolor} size={25} />
+            <Icon name="minus-circle" color={colors.breakcolor} size={25} />
           </TouchableOpacity>
-          <Text style={styles.modalText}>1</Text>
+          <Text style={styles.modalText}>{counter}</Text>
           <TouchableOpacity onPress={handleAddToShoppingPanel}>
-            <Icon name="plus-circle" color={colors.maincolor} size={25} />
+            <Icon name="plus-circle" color={colors.breakcolor} size={25} />
           </TouchableOpacity>
         </View>
       </View>
@@ -128,10 +156,8 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
       </View>
 
       <Text style={styles.modalDecriptionTitle}>About the product</Text>
-      <Text style={styles.modalText}>{product.description}</Text>
-      {/* <TouchableOpacity onPress={onClose}>
-        <Text style={styles.closeButtonText}>Close</Text>
-      </TouchableOpacity> */}
+      <Text style={styles.modalTextDescription}>{product.description}</Text>
+      <Toast />
     </View>
   );
 };
@@ -139,7 +165,6 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
 const styles = StyleSheet.create({
   modalColor: {
     borderRadius: 9999,
-    backgroundColor: "red",
     height: 35,
     width: 35,
     marginRight: 15,
@@ -151,9 +176,7 @@ const styles = StyleSheet.create({
   },
   colorsChoice: {
     flexDirection: "row",
-    // justifyContent: "space-between",
     marginBottom: 10,
-    // justifyContent: "flex-start",
   },
   rowBoxWidth: {
     flexDirection: "row",
@@ -167,44 +190,48 @@ const styles = StyleSheet.create({
     height: "80%",
     backgroundColor: colors.mainwhite,
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 25,
   },
   DescriptionImageContainer: {
-    height: "50%", // Adjust as needed
+    height: "45%",
   },
   DescriptionImage: {
     flex: 1,
     width: "90%",
     resizeMode: "contain",
   },
-  modalText: {
+  modalStock: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "green",
+  },
+  modalTextDescription: {
     fontSize: 18,
-    marginBottom: 10,
-    color: "#333", // Adjust text color
-    lineHeight: 24, // Adjust line height
+    color: colors.darkgray,
+    lineHeight: 24,
+  },
+  modalText: {
+    fontSize: 20,
+    marginBottom: 5,
+    fontWeight: "600",
+    color: colors.maincolor,
   },
   modalTitle: {
     fontSize: 25,
     fontWeight: "600",
-    marginBottom: 10,
-    color: "#333", // Adjust text color
+    color: colors.maincolor,
   },
   modalprice: {
     fontSize: 25,
     fontWeight: "600",
-    marginBottom: 10,
+    marginBottom: 5,
     color: colors.maincolor,
   },
   modalDecriptionTitle: {
     fontSize: 22,
     fontWeight: "500",
     marginBottom: 2,
-    color: "#333", // Adjust text color
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: "blue",
-    marginTop: 10,
+    color: colors.maincolor,
   },
   slide: {
     flex: 1,

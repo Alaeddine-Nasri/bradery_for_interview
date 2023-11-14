@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Product, User } from "../@types/product";
 
-const BASE_URL = "https://a779-46-193-1-137.ngrok-free.app/api";
+const BASE_URL = "https://c6e2-46-193-1-137.ngrok-free.app/api";
 
 export const fetchProducts = async () => {
   try {

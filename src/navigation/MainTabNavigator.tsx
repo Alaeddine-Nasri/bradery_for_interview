@@ -15,6 +15,7 @@ import { ProfilScreen } from "../screens/ProfilScreen";
 import { FavoriteScreen } from "../screens/FavoriteScreen";
 import PanelScreen from "../screens/PanelScreen";
 import AuthScreen from "../screens/AuthScreen";
+import { colors } from "../theme/colors";
 
 export type MainTabParamList = {
   [NavigationKey.HomeScreen]: undefined;
@@ -38,6 +39,7 @@ export const MainTabNavigator: React.FC<MainTabScreenProps> = () => {
         headerShown: false,
         tabBarIcon: (props) => <TabIcon {...props} route={route} />,
         tabBarStyle: styles.tabBar,
+        tabBarActiveTintColor: colors.maincolor,
       })}
       initialRouteName={NavigationKey.AuthScreen}
     >

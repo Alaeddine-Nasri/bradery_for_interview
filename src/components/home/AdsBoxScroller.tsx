@@ -83,9 +83,12 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
             <Image source={{ uri: item.images[0] }} style={styles.AdPhoto} />
           </View>
           <View style={styles.AdsBoxPromoContainer}>
-            <Text style={styles.PromoText}>{item.name}</Text>
-            <Text style={styles.PromoText}>Promo</Text>
-            <Text style={styles.PromoText}>{item.price}</Text>
+            <Text style={styles.PromoTextTitle}>{item.name}</Text>
+            <Text style={styles.PromoText}>Promo 20%</Text>
+            <View style={styles.promosTexr}>
+              <Text style={styles.oldPromoText}>${item.price}</Text>
+              <Text style={styles.newPromoText}>${item.newPrice}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -137,6 +140,11 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
   AdsContainer: {
     flex: 0.35,
     // marginBottom: 10,
@@ -202,9 +210,33 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontSize: 15,
   },
+  promosTexr: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
   PromoText: {
-    color: colors.darkgray,
+    color: colors.maincolor,
     fontWeight: "600",
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  PromoTextTitle: {
+    color: colors.maincolor,
+    fontWeight: "600",
+    fontSize: 20,
+    marginBottom: 5,
+  },
+  oldPromoText: {
+    color: colors.darkgray,
+    fontWeight: "400",
+    fontSize: 16,
+    textDecorationLine: "line-through",
+    textDecorationColor: colors.breakcolor,
+    marginRight: 10,
+  },
+  newPromoText: {
+    color: colors.breakcolor,
+    fontWeight: "800",
     fontSize: 16,
   },
   slide: {

@@ -8,9 +8,7 @@ ShoesStore is a mobile application developed as part of a technical skills asses
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
 
-![Mockup 1](./assets/mockup/home.png)
-
-![Mockup 2](./assets/mockup/homeprofil.png)
+| ![Mockup 1](./assets/mockup/home.png) | ![Mockup 2](./assets/mockup/homeprofil.png) |
 
 </div>
 

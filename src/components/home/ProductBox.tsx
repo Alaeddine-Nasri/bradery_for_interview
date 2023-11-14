@@ -68,8 +68,9 @@ const ProductBox: React.FC<ProductBoxProps> = ({ product }) => {
         </View>
         <View style={styles.rowBox}>
           <View style={styles.cardDetails}>
+            <Text style={styles.stockText}>{product.stock} in stock</Text>
             <Text style={styles.productName}>{product.name}</Text>
-            <Text style={styles.productPrice}>{product.price}</Text>
+            <Text style={styles.productPrice}>${product.price}</Text>
           </View>
           <View>
             <TouchableOpacity onPress={handleFavoritePress}>
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   productCard: {
     backgroundColor: "white",
     borderRadius: 8,
-    elevation: 3, // Android shadow
+    elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -140,10 +141,19 @@ const styles = StyleSheet.create({
   cardDetails: {
     padding: 10,
   },
+  stockText: {
+    fontSize: 13,
+    // fontWeight: "bold",
+    color: "green",
+    marginBottom: 2,
+  },
   productName: {
+    color: colors.maincolor,
     fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 2,
   },
+
   productPrice: {
     fontSize: 14,
     color: colors.breakcolor,

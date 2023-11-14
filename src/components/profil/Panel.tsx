@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { User, Product } from "../../@types/product";
 import FavProductItem from "../favorite/FavProductItem";
 import { fetchBoughtProducts, fetchCartProducts } from "../../api/productAPI";
+import { colors } from "../../theme/colors";
 
 interface PanelProps {
   // user?: User;
@@ -41,10 +42,10 @@ const Panel: React.FC<PanelProps> = ({ products }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Bought Items</Text>
-        <TouchableOpacity style={styles.viewAllButton}>
-          <Text style={styles.viewAllText}>View All</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Products</Text>
+        <TouchableOpacity>
+          <Text style={styles.viewMore}>See More</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.row}>
@@ -66,9 +67,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 8,
   },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
   title: {
-    fontSize: 18,
-    fontWeight: "bold",
+    color: colors.maincolor,
+    fontWeight: "600",
+    fontSize: 20,
+  },
+  viewMore: {
+    color: colors.breakcolor,
+    textDecorationLine: "underline",
+    fontSize: 15,
   },
   viewAllButton: {
     padding: 8,

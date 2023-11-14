@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ScrollView,
   View,
@@ -13,11 +13,18 @@ import FavoriteHeader from "../components/favorite/FavoriteHeader";
 import Panel from "../components/profil/Panel";
 import { fetchFavItems } from "../api/productAPI";
 import { Product, User } from "../@types/product";
+import { debounce } from "lodash";
+import SearchBar from "../components/home/SearchBar";
 
 export const FavoriteScreen: React.FC = () => {
+  const [showSearch, toggleSearch] = React.useState(false);
   const [FavProducts, setFavProducts] = useState<Product[]>([]);
   const [user, setUser] = useState<User | undefined>(undefined);
   const [refreshing, setRefreshing] = useState(false);
+
+  const handleSearch = (value: string) => {
+    //ù
+  };
 
   const fetchData = async () => {
     try {
@@ -38,6 +45,10 @@ export const FavoriteScreen: React.FC = () => {
     setRefreshing(true);
     fetchData();
   };
+  const handleTextDebouce = useCallback(
+    debounce((value: string) => handleSearch(value), 1200),
+    []
+  );
 
   return (
     <ScrollView
@@ -55,10 +66,14 @@ export const FavoriteScreen: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
         }}
       >
-        <FavoriteHeader
-          title="Favorite Items"
-          description="Your most loved items"
-        />
+        <FavoriteHeader title="Wish List" description="You have a great tase" />
+        <View style={styles.Searchcontainer}>
+          <SearchBar
+            showSearch={!showSearch}
+            toggleSearch={toggleSearch}
+            handleTextDebouce={handleTextDebouce}
+          />
+        </View>
         <Panel products={FavProducts} />
       </SafeAreaView>
     </ScrollView>
@@ -71,5 +86,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+  },
+  Searchcontainer: {
+    width: "90%",
+    marginLeft: "5%",
   },
 });

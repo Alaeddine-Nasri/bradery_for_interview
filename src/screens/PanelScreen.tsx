@@ -86,10 +86,7 @@ const PanelScreen: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
         }}
       >
-        <FavoriteHeader
-          title="Cart Picks"
-          description="Your picks! You have a great taste!"
-        />
+        <FavoriteHeader title="Cart Picks" description="Buy your items now" />
         <Panel products={cartProducts} />
 
         <View style={styles.totalPriceContainer}>

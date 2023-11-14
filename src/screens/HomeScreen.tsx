@@ -24,7 +24,8 @@ import { productsStat } from "../@types/products";
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedFilter, setSelectedFilter] = React.useState<string>("");
+  const [selectedFilter, setSelectedFilter] =
+    React.useState<string>("Best Match");
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const handleSearch = (value: string) => {

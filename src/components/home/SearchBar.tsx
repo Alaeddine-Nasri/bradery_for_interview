@@ -10,6 +10,8 @@ import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
 import { theme } from "../../theme";
 import { colors } from "../../theme/colors";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationKey } from "../../navigation/NavigationKey";
 
 type SearchBarProps = {
   showSearch: boolean;
@@ -22,6 +24,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
   toggleSearch,
   handleTextDebouce,
 }) => {
+  const navigation = useNavigation();
+
+  const handleCartPress = () => {
+    console.log("changing to panelScreen");
+    navigation.navigate(NavigationKey.PanelScreen as never);
+  };
   return (
     <View style={styles.topBarContainer}>
       <TouchableOpacity
@@ -45,9 +53,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
           {/* ) : null} */}
         </View>
       </TouchableOpacity>
-      <View style={styles.PanelContainer}>
-        <Icon name="shopping-cart" color={colors.breakcolor} size={25} />
-      </View>
+      <TouchableOpacity
+        onPress={handleCartPress}
+        style={styles.shodowContainer}
+      >
+        <Icon name="shopping-cart" color={colors.maincolor} size={25} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -65,8 +76,13 @@ const styles = StyleSheet.create({
     height: "auto",
     marginVertical: 10,
     zIndex: 2,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  PanelContainer: {
+  shodowContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -77,6 +93,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 5,
     backgroundColor: "#FFF",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
   },
   searchInputContainer: {
     flexDirection: "row",

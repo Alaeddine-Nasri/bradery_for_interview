@@ -68,7 +68,7 @@ export const removeFromCart = async (userId: number, productId: number) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error removing product from cart:", error);
+    // console.error("Error removing product from cart:", error);
     throw error;
   }
 };

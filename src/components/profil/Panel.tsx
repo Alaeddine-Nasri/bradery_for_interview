@@ -23,12 +23,22 @@ const Panel: React.FC<PanelProps> = ({ products }) => {
 
   if (!products || products.length === 0) {
     return (
-      <View style={styles.noItemsContainer}>
-        <Image
-          source={require("../../../assets/images/sad.png")}
-          style={styles.sadImage}
-        />
-        <Text style={styles.noItemsText}>You haven't bought any items.</Text>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Products</Text>
+          <TouchableOpacity onPress={handleCartPress}>
+            <Text style={styles.viewMore}>See More</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.noItemsContainer}>
+          <Image
+            source={require("../../../assets/images/sad.png")}
+            style={styles.sadImage}
+          />
+          <Text style={styles.noItemsText}>
+            You haven't any items in your Panel😔.
+          </Text>
+        </View>
       </View>
     );
   }

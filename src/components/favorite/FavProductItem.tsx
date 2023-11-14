@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { colors } from "../../theme/sizes";
 import ProductDescription from "../home/ProductDescription";
-import { addToCart, removeFromCart } from "../../api/productAPI";
+import {
+  addToCart,
+  addToFavorites,
+  checkIfFavorite,
+  removeFromCart,
+  removeFromFavorite,
+} from "../../api/productAPI";
+import { colors } from "../../theme/colors";
 
 type FavProductItemProps = {
   product: Product;
@@ -13,9 +19,41 @@ type FavProductItemProps = {
 
 const FavProductItem: React.FC<FavProductItemProps> = ({ product }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const fetchFavoriteStatus = async () => {
+      try {
+        const userId = 1; // Replace with the actual user ID
+        const result = await checkIfFavorite(userId, product.id);
+        setIsFavorite(result.isFavorite);
+      } catch (error) {
+        console.error("Error fetching favorite status:", error);
+      }
+    };
+
+    fetchFavoriteStatus();
+  }, [product.id]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const handleFavoritePress = async () => {
+    const userId = 1;
+    console.log("handleFavoritePress");
+    try {
+      if (isFavorite) {
+        console.log("handleFavoritePressf");
+        await removeFromFavorite(userId, product.id);
+      } else {
+        console.log("handleFavoritePressn");
+        await addToFavorites(userId, product.id);
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
   };
 
   return (
@@ -52,6 +90,8 @@ const FavProductItem: React.FC<FavProductItemProps> = ({ product }) => {
           onClose={toggleModal}
           addToCart={addToCart}
           removeFromCart={removeFromCart}
+          addToFavorites={addToFavorites}
+          removeFromFavorite={removeFromFavorite}
         />
       </Modal>
     </TouchableOpacity>

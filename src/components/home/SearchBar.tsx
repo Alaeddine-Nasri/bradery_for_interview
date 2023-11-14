@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
 import { theme } from "../../theme";
-import { colors } from "../../theme/sizes";
+import { colors } from "../../theme/colors";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 type SearchBarProps = {
   showSearch: boolean;
@@ -22,43 +23,68 @@ const SearchBar: React.FC<SearchBarProps> = ({
   handleTextDebouce,
 }) => {
   return (
-    <TouchableOpacity
-      style={styles.searchContainer}
-      onPress={() => toggleSearch(!showSearch)}
-    >
-      <View style={styles.searchInputContainer}>
-        {showSearch ? (
+    <View style={styles.topBarContainer}>
+      <TouchableOpacity
+        style={styles.searchContainer}
+        onPress={() => toggleSearch(!showSearch)}
+      >
+        <View style={styles.searchInputContainer}>
+          <TouchableOpacity
+            onPress={() => toggleSearch(!showSearch)}
+            style={styles.searchIconContainer}
+          >
+            <MagnifyingGlassIcon size={25} color={colors.maincolor} />
+          </TouchableOpacity>
+          {/* {!showSearch ? ( */}
           <TextInput
             onChangeText={(text) => handleTextDebouce(text)}
             placeholder="Search Product.."
-            placeholderTextColor={"lightgray"}
+            placeholderTextColor={colors.maincolor}
             style={styles.searchInput}
-          />
-        ) : null}
-
-        <TouchableOpacity
-          onPress={() => toggleSearch(!showSearch)}
-          style={styles.searchIconContainer}
-        >
-          <MagnifyingGlassIcon size={25} color={colors.maincolor} />
-        </TouchableOpacity>
+          ></TextInput>
+          {/* ) : null} */}
+        </View>
+      </TouchableOpacity>
+      <View style={styles.PanelContainer}>
+        <Icon name="shopping-cart" color={colors.breakcolor} size={25} />
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  topBarContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 20,
+  },
   searchContainer: {
+    width: "82%",
     height: "auto",
     marginVertical: 10,
     zIndex: 2,
   },
+  PanelContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "15%",
+    height: 50,
+    marginVertical: 10,
+    zIndex: 2,
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: "#FFF",
+  },
   searchInputContainer: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     alignItems: "center",
     borderRadius: 10,
-    backgroundColor: theme.bgWhite("0.2"),
+    padding: 5,
+    backgroundColor: "#FFF",
   },
   searchInput: {
     paddingLeft: 6,
@@ -66,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "bold",
-    color: "white",
+    color: colors.maincolor,
   },
   searchIconContainer: {
     backgroundColor: theme.bgWhite("0.2"),

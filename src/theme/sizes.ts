@@ -13,11 +13,11 @@ export const sizes = {
   xxl: 30,
 };
 
-export const colors = {
-  maincolor: "#203059",
-  mainwhite: "#FCF5EE",
-  maingrey: "#D7D7D7",
-  mainblack: "#282828",
-  secondarycolor: "#FCF5EE",
-  breakcolor: "#FE7F43",
-};
+// export const colors = {
+//   maincolor: "#203059",
+//   mainwhite: "#FCF5EE",
+//   maingrey: "#D7D7D7",
+//   mainblack: "#282828",
+//   secondarycolor: "#FCF5EE",
+//   breakcolor: "#FE7F43",
+// };

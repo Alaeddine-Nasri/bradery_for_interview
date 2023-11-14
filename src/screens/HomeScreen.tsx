@@ -16,7 +16,7 @@ import TopBar from "../components/home/TopBar";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
 import AdsBoxScroller from "../components/home/AdsBoxScroller";
 import { fetchProducts } from "../api/productAPI"; // Update this path
-import { colors } from "../theme/sizes";
+import { colors } from "../theme/colors";
 import Filtre from "../components/home/Filtre";
 import { Product } from "../@types/product";
 import { productsStat } from "../@types/products";
@@ -79,20 +79,20 @@ export const HomeScreen: React.FC = () => {
           paddingTop: Platform.OS === "android" ? StatusB.currentHeight : 0,
         }}
       >
-        <TopBar />
+        {/* <TopBar /> */}
         <ScrollView
           style={styles.MainScreenContainer}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
-          contentContainerStyle={{ flexGrow: 1 }}
         >
-          <AdsBoxScroller products={productsStat} />
           <SearchBar
-            showSearch={showSearch}
+            showSearch={!showSearch}
             toggleSearch={toggleSearch}
             handleTextDebouce={handleTextDebouce}
           />
+          <AdsBoxScroller products={products} />
+
           <Filtre
             onFilterPress={handleFilterPress}
             selectedFilter={selectedFilter}
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     paddingHorizontal: "2%",
-    backgroundColor: colors.maingrey,
+    backgroundColor: colors.maingray,
     flexDirection: "column",
   },
   ProductContainer: {

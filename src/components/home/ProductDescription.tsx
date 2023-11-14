@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Swiper from "react-native-swiper";
 import { Product } from "../../@types/product";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { colors } from "../../theme/sizes";
+import { colors } from "../../theme/colors";
 import { checkIfFavorite } from "../../api/productAPI";
 // import { removeFromFavorite } from "../../api/productAPI";
 

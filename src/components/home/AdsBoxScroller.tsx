@@ -11,7 +11,15 @@ import {
 import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
 import ProductDescription from "./ProductDescription";
-import { addToCart } from "../../api/productAPI";
+import Icon from "react-native-vector-icons/FontAwesome";
+import {
+  addToCart,
+  addToFavorites,
+  removeFromCart,
+  removeFromFavorite,
+  checkIfFavorite,
+} from "../../api/productAPI";
+import { colors } from "../../theme/colors";
 
 type AdsBoxProps = {
   products: Product[];
@@ -22,6 +30,7 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
   const currentIndexRef = useRef<number>(0);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,13 +44,39 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
     return () => clearInterval(interval);
   }, [products]);
 
-  const toggleModal = (product: Product) => {
+  const toggleModal = async (product: Product) => {
     setSelectedProduct(product);
     setModalVisible(!isModalVisible);
+
+    // Fetch favorite status when the modal is opened
+    try {
+      const userId = 1; // Replace with the actual user ID
+      const result = await checkIfFavorite(userId, product.id);
+      setIsFavorite(result.isFavorite);
+    } catch (error) {
+      console.error("Error fetching favorite status:", error);
+    }
+  };
+
+  const handleFavoritePress = async () => {
+    const userId = 1; // Replace with the actual user ID
+    try {
+      if (isFavorite) {
+        await removeFromFavorite(userId, selectedProduct?.id || 0);
+      } else {
+        await addToFavorites(userId, selectedProduct?.id || 0);
+      }
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
   };
 
   const renderItem = ({ item }: { item: Product; index: number }) => (
-    <TouchableOpacity onPress={() => toggleModal(item)}>
+    <TouchableOpacity
+      onPress={() => toggleModal(item)}
+      style={styles.sliderContainer}
+    >
       <View style={styles.slide}>
         <View style={styles.AdsBoxContainer}>
           <View style={styles.AdPhotoContainer}>
@@ -58,37 +93,45 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
   );
 
   return (
-    <View style={styles.AdsContainer}>
-      <FlatList
-        style={styles.sliderContainer}
-        ref={flatListRef}
-        horizontal
-        data={products}
-        keyExtractor={(item, index) => `${index}`}
-        renderItem={renderItem}
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x / Dimensions.get("window").width
-          );
-          currentIndexRef.current = index;
-        }}
-      />
+    <View>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Promotions</Text>
+        <Text style={styles.viewMore}>See More</Text>
+      </View>
+      <View style={styles.AdsContainer}>
+        <FlatList
+          ref={flatListRef}
+          horizontal
+          data={products}
+          keyExtractor={(item, index) => `${index}`}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={(event) => {
+            const index = Math.round(
+              event.nativeEvent.contentOffset.x / Dimensions.get("window").width
+            );
+            currentIndexRef.current = index;
+          }}
+        />
 
-      {/* Modal for displaying more details */}
-      <Modal
-        style={styles.modalC}
-        isVisible={isModalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-      >
-        {selectedProduct && (
-          <ProductDescription
-            product={selectedProduct}
-            onClose={() => setModalVisible(false)}
-            addToCart={addToCart}
-          />
-        )}
-      </Modal>
+        {/* Modal for displaying more details */}
+        <Modal
+          style={styles.modalC}
+          isVisible={isModalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+        >
+          {selectedProduct && (
+            <ProductDescription
+              product={selectedProduct}
+              onClose={() => setModalVisible(false)}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+              addToFavorites={addToFavorites}
+              removeFromFavorite={removeFromFavorite}
+            />
+          )}
+        </Modal>
+      </View>
     </View>
   );
 };
@@ -96,10 +139,23 @@ const AdsBox: React.FC<AdsBoxProps> = ({ products }) => {
 const styles = StyleSheet.create({
   AdsContainer: {
     flex: 0.35,
+    // marginBottom: 10,
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   sliderContainer: {
-    flex: 0.3,
-    margin: 0,
+    // backgroundColor: "red",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalC: {
     margin: 0,
@@ -107,19 +163,20 @@ const styles = StyleSheet.create({
   },
   AdsBoxContainer: {
     alignItems: "center",
-    flex: 0.8,
-    width: "90%",
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 15,
     borderRadius: 8,
     backgroundColor: "white",
-    borderWidth: 3,
-    borderColor: "#fff",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
+  },
+  favoriteIconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   AdPhotoContainer: {
     flex: 0.4,
@@ -134,8 +191,18 @@ const styles = StyleSheet.create({
     height: 100,
     resizeMode: "contain",
   },
+  title: {
+    color: colors.mainblack,
+    fontWeight: "600",
+    fontSize: 20,
+  },
+  viewMore: {
+    color: colors.breakcolor,
+    textDecorationLine: "underline",
+    fontSize: 15,
+  },
   PromoText: {
-    color: "grey",
+    color: colors.darkgray,
     fontWeight: "600",
     fontSize: 16,
   },

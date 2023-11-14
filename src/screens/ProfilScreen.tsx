@@ -15,14 +15,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import UserInfos from "../components/profil/UserInfo";
 import Commands from "../components/profil/Commands";
 import Panel from "../components/profil/Panel";
-import { fetchUserById } from "../api/productAPI";
-import { User } from "../@types/product";
+import { fetchCartProducts, fetchUserById } from "../api/productAPI";
+import { Product, User } from "../@types/product";
 import { users } from "../@types/users";
 
 export const ProfilScreen: React.FC = () => {
   // const user = users[0];
 
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [cartProducts, setCartProducts] = useState<Product[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const products = await fetchCartProducts(1);
+      setCartProducts(products);
+    } catch (error) {
+      console.error("Error fetching bought products:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +68,7 @@ export const ProfilScreen: React.FC = () => {
       >
         <UserInfos user={user} />
         <Commands userId={1} />
-        <Panel userId={1} />
+        <Panel products={cartProducts} />
       </SafeAreaView>
       {/* <Text style={styles.text}>Profil</Text> */}
     </ScrollView>
@@ -70,3 +86,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 });
+function setRefreshing(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}

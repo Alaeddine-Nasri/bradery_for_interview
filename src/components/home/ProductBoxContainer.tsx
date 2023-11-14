@@ -37,6 +37,7 @@ const ProductBoxContainer: React.FC<ProductBoxContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // backgroundColor: "red",
     // padding: 16,
   },
   row: {

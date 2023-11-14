@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import { Product } from "../../@types/product";
 import ProductDescription from "./ProductDescription";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { colors } from "../../theme/sizes";
+import { colors } from "../../theme/colors";
 import {
   addToCart,
   addToFavorites,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
   },
   cardStyle: {
-    width: "50%",
+    width: "48%",
   },
   modalC: {
     margin: 0,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    margin: 10,
+    marginVertical: 8,
     overflow: "hidden",
   },
   cardImageContainer: {

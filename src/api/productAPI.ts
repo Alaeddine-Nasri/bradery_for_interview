@@ -14,6 +14,30 @@ export const fetchProducts = async () => {
     throw error;
   }
 };
+export const listproductsPromotion = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/product/promotion`);
+    const promoProducts = response.data;
+    console.log("Promotional Products are: ", promoProducts);
+    return promoProducts;
+  } catch (error) {
+    console.error("Error fetching promotional products:", error);
+    throw error;
+  }
+};
+
+export const fetchProductsByType = async (type: any) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/products/${type}`);
+    const filteredProducts = response.data;
+    console.log(`Products filtered by type (${type}) are:`, filteredProducts);
+    return filteredProducts;
+  } catch (error) {
+    console.error(`Error fetching products by type (${type}):`, error);
+    throw error;
+  }
+};
+
 export const fetchUserById = async (userId: number): Promise<User> => {
   try {
     const response = await axios.get(`${BASE_URL}/user/${userId}`);

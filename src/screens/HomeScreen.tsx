@@ -15,7 +15,11 @@ import SearchBar from "../components/home/SearchBar";
 import TopBar from "../components/home/TopBar";
 import ProductBoxContainer from "../components/home/ProductBoxContainer";
 import AdsBoxScroller from "../components/home/AdsBoxScroller";
-import { fetchProducts } from "../api/productAPI"; // Update this path
+import {
+  fetchProducts,
+  fetchProductsByType,
+  listproductsPromotion,
+} from "../api/productAPI"; // Update this path
 import { colors } from "../theme/colors";
 import Filtre from "../components/home/Filtre";
 import { Product } from "../@types/product";
@@ -24,6 +28,7 @@ import { productsStat } from "../@types/products";
 export const HomeScreen: React.FC = () => {
   const [showSearch, toggleSearch] = React.useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [promotionProducts, setPromoProducts] = useState<Product[]>([]);
   const [selectedFilter, setSelectedFilter] =
     React.useState<string>("Best Match");
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -32,16 +37,36 @@ export const HomeScreen: React.FC = () => {
     // You can filter the products based on the search value here if needed
   };
 
-  const handleFilterPress = (filter: string) => {
+  const handleFilterPress = async (filter: string) => {
     setSelectedFilter(filter);
-    // You can filter the products based on the selected filter here if needed
+
+    try {
+      let filteredData;
+
+      if (filter === "Promotion") {
+        // Use listproductsPromotion for promotion filter
+        filteredData = await listproductsPromotion();
+      } else {
+        // Use fetchProductsByType for other filters
+        filteredData = await fetchProductsByType(filter);
+      }
+
+      // Set the filtered products based on the selected filter
+      setProducts(filteredData);
+    } catch (error) {
+      console.error(`Error fetching products for filter (${filter}):`, error);
+      // Handle error as needed
+    }
   };
 
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
       const data = await fetchProducts();
+
       setProducts(data);
+      const promoData = await listproductsPromotion();
+      setPromoProducts(promoData);
     } catch (error) {
       console.error("Error fetching products:", error);
       // Handle error as needed
@@ -58,11 +83,19 @@ export const HomeScreen: React.FC = () => {
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
-        // Handle error as needed
+      }
+    };
+    const fetchPromotionData = async () => {
+      try {
+        const data = await listproductsPromotion();
+        setPromoProducts(data);
+      } catch (error) {
+        console.error("Error fetching promo products:", error);
       }
     };
 
     fetchData();
+    fetchPromotionData();
   }, []);
 
   const handleTextDebouce = useCallback(
@@ -92,7 +125,7 @@ export const HomeScreen: React.FC = () => {
             toggleSearch={toggleSearch}
             handleTextDebouce={handleTextDebouce}
           />
-          <AdsBoxScroller products={products} />
+          <AdsBoxScroller products={promotionProducts} />
 
           <Filtre
             onFilterPress={handleFilterPress}

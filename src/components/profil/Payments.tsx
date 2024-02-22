@@ -57,8 +57,9 @@ const Payments: React.FC<PaymentsProps> = ({
       text2: "Thank for buying from us.",
       visibilityTime: 3000,
     });
-    await handleAddingToBoughtProducts();
+
     await handleRemoveToShoppingPanel();
+    await handleAddingToBoughtProducts();
 
     onClose();
   };

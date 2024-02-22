@@ -1,12 +1,13 @@
-// database.js
-const { Sequelize } = require("sequelize");
-const config = require("./config/config.json"); // Make sure this path is correct
+const mysql = require("mysql2");
 
-const { username, password, database, host, dialect } = config.development;
-
-const sequelize = new Sequelize(database, username, password, {
-  host,
-  dialect,
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "user",
+  database: "testTechniqueDB",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-module.exports = sequelize;
+module.exports = pool;
